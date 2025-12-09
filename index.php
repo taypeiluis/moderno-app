@@ -119,7 +119,7 @@ $productos = $conn->query($sql)->fetch_all(MYSQLI_ASSOC);
 
     <div class="row g-3">
       <?php foreach($productos as $p): ?>
-        <div class="col-md-4">
+        <div class="col-6 col-md-3">
           <div class="card card-product h-100">
 
           <?php
