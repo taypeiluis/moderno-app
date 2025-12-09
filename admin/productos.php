@@ -1,69 +1,58 @@
 <?php
-session_start();
-require '../inc/db.php';
-require '../inc/functions.php';
-if(!isset($_SESSION['admin'])) { header('Location: index.php'); exit; }
+require_once __DIR__ . '/admin-config.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nombre'])) {
-    $nombre = trim($_POST['nombre']);
-    $categoria = (int)$_POST['categoria'];
-    $desc = $_POST['descripcion'] ?? '';
-    $pu = (float)$_POST['precio_unitario'];
-    $pm = (float)$_POST['precio_mayor'];
-    $imagen = '';
-
-    if(isset($_FILES['imagen']) && $_FILES['imagen']['error']===0) {
-        $allowed = ['jpg','jpeg','png','webp'];
-        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
-        if(in_array($ext, $allowed) && $_FILES['imagen']['size'] < 5*1024*1024) {
-            $imagen = uniqid().'_'.time().'.'.$ext;
-            move_uploaded_file($_FILES['imagen']['tmp_name'], '../uploads/productos/'.$imagen);
-        }
-    }
-
-    $stmt = $conn->prepare("INSERT INTO productos (categoria_id,nombre,descripcion,precio_unitario,precio_mayor,imagen) VALUES (?,?,?,?,?,?)");
-    $stmt->bind_param("issdds",$categoria,$nombre,$desc,$pu,$pm,$imagen);
-    $stmt->execute();
-    header('Location: productos.php'); exit;
-}
-
-$productos = $conn->query("SELECT p.*, c.nombre as categoria FROM productos p LEFT JOIN categorias c ON p.categoria_id=c.id ORDER BY p.id DESC")->fetch_all(MYSQLI_ASSOC);
-$cats = $conn->query("SELECT id,nombre FROM categorias ORDER BY nombre")->fetch_all(MYSQLI_ASSOC);
+$res = $conn->query("SELECT p.*, c.nombre AS categoria FROM productos p LEFT JOIN categorias c ON p.categoria_id = c.id ORDER BY p.id DESC");
+$productos = $res ? $res->fetch_all(MYSQLI_ASSOC) : [];
 ?>
-<!doctype html><html><head><meta charset="utf-8"><link href="../assets/css/style_moderno.css" rel="stylesheet"></head><body>
-<div class="container py-4">
-  <a href="dashboard.php" class="btn btn-link">Volver</a>
-  <h4>Agregar producto</h4>
-  <form method="post" enctype="multipart/form-data" class="mb-4">
-    <div class="row g-2">
-      <div class="col-md-6"><input name="nombre" class="form-control" placeholder="Nombre" required></div>
-      <div class="col-md-3"><select name="categoria" class="form-select" required><?php foreach($cats as $c) echo '<option value="'.$c['id'].'">'.e($c['nombre']).'</option>'; ?></select></div>
-      <div class="col-md-3"><input name="imagen" type="file" class="form-control"></div>
-      <div class="col-12"><textarea name="descripcion" class="form-control" placeholder="Descripción"></textarea></div>
-      <div class="col-md-6"><input name="precio_unitario" type="number" step="0.01" class="form-control" placeholder="Precio unitario" required></div>
-      <div class="col-md-6"><input name="precio_mayor" type="number" step="0.01" class="form-control" placeholder="Precio mayorista" required></div>
-    </div>
-    <div class="mt-2"><button class="btn btn-success">Guardar</button></div>
-  </form>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Productos | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <h4>Listado de productos</h4>
-  <table class="table table-hover"><thead><tr><th>ID</th><th>Nombre</th><th>Cat</th><th>Unit</th><th>Mayor</th><th>Acción</th></tr></thead><tbody>
-    <?php foreach($productos as $p): ?>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/style_moderno.css">
+</head>
+<body class="bg-dark text-light">
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Productos</h3>
+    <a href="index.php" class="btn btn-sm btn-outline-light">← Volver al panel</a>
+  </div>
+
+  <table class="table table-dark table-striped table-sm align-middle">
+    <thead>
       <tr>
-        <td><?= $p['id'] ?></td>
-        <td><?= e($p['nombre']) ?></td>
-        <td><?= e($p['categoria']) ?></td>
-        <td><?= number_format($p['precio_unitario'],2) ?></td>
-        <td><?= number_format($p['precio_mayor'],2) ?></td>
-        <td>
-          <a class="btn btn-sm btn-primary" href="productos_edit.php?id=<?= $p['id'] ?>">Editar</a>
-          <form method="post" action="productos_delete.php" style="display:inline">
-            <input type="hidden" name="id" value="<?= $p['id'] ?>">
-            <button class="btn btn-sm btn-danger" onclick="return confirm('Eliminar?')">Eliminar</button>
-          </form>
-        </td>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Precio público</th>
+        <th>Precio distribuidor</th>
+        <th></th>
       </tr>
-    <?php endforeach; ?>
-  </tbody></table>
+    </thead>
+    <tbody>
+      <?php foreach ($productos as $p): ?>
+        <tr>
+          <td><?= $p['id'] ?></td>
+          <td><?= e($p['nombre']) ?></td>
+          <td><?= e($p['categoria']) ?></td>
+          <td>S/. <?= number_format($p['precio_unitario'], 2) ?></td>
+          <td>S/. <?= number_format($p['precio_mayor'], 2) ?></td>
+          <td>
+            <a href="productos_edit.php?id=<?= $p['id'] ?>" class="btn btn-sm btn-outline-info">
+              Editar
+            </a>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+  </table>
 </div>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
