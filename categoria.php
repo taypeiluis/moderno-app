@@ -1,21 +1,15 @@
-<?php include "inc/header.php"; ?>
-<?php include "inc/db.php"; ?>
-
 <?php
-$id = $_GET['id'];
-$productos = $conexion->query("SELECT * FROM productos WHERE categoria_id=$id");
-?>
+// categoria.php
+// Redirige al catálogo principal usando el filtro de categoría.
 
-<h2 class="title">Productos</h2>
+// Tomamos el id de categoría si viene en la URL: categoria.php?id=3
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-<div class="grid">
-<?php while($p = $productos->fetch_assoc()): ?>
-    <a class="card" href="producto.php?id=<?= $p['id'] ?>">
-        <h3><?= $p['nombre'] ?></h3>
-        <p><?= $p['descripcion'] ?></p>
-        <span class="price">$<?= $p['precio_publico'] ?></span>
-    </a>
-<?php endwhile; ?>
-</div>
-
-<?php include "inc/footer.php"; ?>
+if ($id > 0) {
+    // Si hay una categoría, mandamos al index con ese filtro
+    header('Location: index.php?cat=' . $id);
+} else {
+    // Si no viene nada, mostramos todo el catálogo
+    header('Location: index.php');
+}
+exit;

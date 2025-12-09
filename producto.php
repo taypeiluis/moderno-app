@@ -1,7 +1,27 @@
-<?php
+<?php 
 require 'inc/header.php';
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+
+if ($id <= 0) {
+    echo '<div class="container py-4"><div class="alert alert-danger">Producto no válido</div></div>';
+    require 'inc/footer.php';
+    exit;
+}
+
+// Función para escapar, por si acaso
+if (!function_exists('e')) {
+    function e($value) {
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+// Función para detectar si es URL externa
+if (!function_exists('esURL')) {
+    function esURL($cadena) {
+        return filter_var($cadena, FILTER_VALIDATE_URL) !== false;
+    }
+}
 
 $stmt = $conn->prepare("
   SELECT p.*, c.nombre AS categoria
@@ -14,12 +34,54 @@ $stmt->execute();
 $res = $stmt->get_result();
 
 if ($res->num_rows !== 1) {
-    echo '<div class="alert alert-danger mt-4">Producto no encontrado</div>';
+    echo '<div class="container py-4"><div class="alert alert-danger mt-4">Producto no encontrado</div></div>';
     require 'inc/footer.php';
     exit;
 }
 
 $p = $res->fetch_assoc();
+
+// ----------------------
+// RESOLVER IMAGEN IGUAL QUE EN index.php
+// ----------------------
+$imgSrc = null;
+
+if (!empty($p['imagen'])) {
+
+    if (esURL($p['imagen'])) {
+        // URL externa (https://...)
+        $imgSrc = $p['imagen'];
+
+    } elseif (file_exists('uploads/productos/' . $p['imagen'])) {
+        // Archivo dentro de uploads/productos/
+        $imgSrc = 'uploads/productos/' . $p['imagen'];
+
+    } elseif (file_exists('uploads/' . $p['imagen'])) {
+        // Fallback por si algunas están en uploads/ a secas
+        $imgSrc = 'uploads/' . $p['imagen'];
+    }
+}
+
+// ----------------------
+// PRECIOS Y WHATSAPP
+// ----------------------
+
+// Usa el mismo número que en index.php (formato internacional sin '+')
+$whatsappNumero = '51999999999'; // <-- CAMBIA ESTO POR TU NÚMERO REAL
+
+// Elegir el precio según si es distribuidor o no
+if (!empty($esMayorista) && $esMayorista && !empty($p['precio_mayor'])) {
+    $precioMostrar = $p['precio_mayor'];
+} else {
+    $precioMostrar = $p['precio_unitario'];
+}
+
+// Texto que se enviará por WhatsApp
+$textoProducto = $p['nombre'] . ' - S/ ' . number_format($precioMostrar, 2);
+$mensaje = "Hola, quisiera más información del producto: " . $textoProducto;
+
+// Enlace a WhatsApp
+$wa = "https://wa.me/" . $whatsappNumero . "?text=" . urlencode($mensaje);
 ?>
 
 <div class="product-page">
@@ -29,11 +91,15 @@ $p = $res->fetch_assoc();
       <!-- Columna imagen / badges -->
       <div class="col-md-4">
         <div class="product-card-left">
-          <?php if (!empty($p['imagen'])): ?>
-            <img src="uploads/<?= e($p['imagen']) ?>" class="product-main-img" alt="<?= e($p['nombre']) ?>">
+          <?php if ($imgSrc): ?>
+            <!-- Imagen corregida y responsiva -->
+            <img src="<?= e($imgSrc) ?>" 
+                 class="product-main-img img-fluid" 
+                 alt="<?= e($p['nombre']) ?>">
           <?php else: ?>
+            <!-- Placeholder si no hay imagen válida -->
             <div class="product-placeholder">
-              <?= strtoupper(substr($p['nombre'],0,2)) ?>
+              <?= strtoupper(substr($p['nombre'], 0, 2)) ?>
             </div>
           <?php endif; ?>
 
@@ -81,14 +147,10 @@ $p = $res->fetch_assoc();
                 Comprar ahora
               </button>
 
-              <?php
-                // Puedes construir tu enlace de WhatsApp aquí
-                $mensaje = urlencode("Hola, quiero comprar el producto: ".$p['nombre']);
-                $wa = "https://wa.me/51999999999?text=".$mensaje;
-              ?>
               <a href="<?= $wa ?>" target="_blank" class="btn-whatsapp-main">
                 Comprar vía WhatsApp
               </a>
+
             </div>
           </form>
 
