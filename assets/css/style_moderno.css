@@ -1,0 +1,434 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+:root{
+  --bg:#0a0f1c;
+  --muted:#9ca3af;
+  --accent:#0ea5ff;
+  --accent2:#7c3aed;
+  --glass: rgba(255,255,255,0.03);
+  --radius: 14px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background: linear-gradient(180deg,var(--bg),#071026);
+  color:#e5e7eb;
+}
+
+a{color:#93c5fd;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Navbar */
+.navbar{
+  background: rgba(4,7,16,0.96);
+  backdrop-filter: blur(18px);
+  border-bottom:1px solid rgba(148,163,184,0.18);
+}
+.navbar-brand{
+  font-weight:700;
+  letter-spacing:.08em;
+  font-size:1.1rem;
+}
+.navbar-nav .nav-link{
+  color:#9ca3af !important;
+  font-weight:500;
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active{
+  color:#e5e7eb !important;
+}
+
+/* Hero / Carousel */
+.hero{
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 28px 60px rgba(15,23,42,0.9);
+  border:1px solid rgba(148,163,184,0.25);
+}
+.hero .carousel-caption{
+  background: linear-gradient(120deg,rgba(15,23,42,0.9),rgba(30,64,175,0.9));
+  border-radius:16px;
+  padding:14px 18px;
+  text-align:left;
+}
+.hero .carousel-caption h2{
+  font-size:1.6rem;
+  font-weight:700;
+}
+
+/* Cards base */
+.card.glass{
+  background: radial-gradient(circle at top left,rgba(14,165,233,0.18),rgba(15,23,42,0.98));
+  border-radius: var(--radius);
+  border:1px solid rgba(148,163,184,0.2);
+  box-shadow:0 22px 40px rgba(15,23,42,0.85);
+}
+
+/* === Tarjetas de producto (look más pro) === */
+.card-product {
+  background: radial-gradient(circle at top left,
+              rgba(14,165,233,0.18),
+              rgba(15,23,42,0.98));
+  border-radius: 14px;
+  border: 1px solid rgba(148,163,184,0.22);
+  box-shadow: 0 18px 40px rgba(15,23,42,0.75);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+
+.card-product:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 55px rgba(15,23,42,0.9);
+  border-color: rgba(56,189,248,0.9);
+}
+
+/* Imagen un poco más compacta */
+.card-product .card-img-top {
+  height: 150px;
+  object-fit: cover;
+  border-bottom: 1px solid rgba(15,23,42,0.9);
+}
+
+/* Contenido */
+.card-product .card-body {
+  padding: 0.75rem 0.8rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-product .badge-cat {
+  display:inline-block;
+  background: rgba(15,23,42,0.95);
+  border-radius: 999px;
+  border:1px solid rgba(148,163,184,0.6);
+  padding: 2px 8px;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #9ca3af;
+  margin-bottom: 0.3rem;
+}
+
+.card-product .card-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Descripción pequeñita */
+.card-product .small.text-muted {
+  font-size: 0.75rem;
+}
+
+/* Precio */
+.price-unit,
+.price-wholesale {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.15rem;
+}
+
+.price-unit { color: #0ea5ff; }
+.price-wholesale { color: #f973b7; }
+
+/* Forms and lists */
+.form-control, .form-select { background: var(--glass); border:1px solid rgba(255,255,255,0.03); color:#e6eef8; }
+.list-group-item { background: transparent; border:1px solid...,0.02); color:#dbeafe; border-radius:10px; margin-bottom:8px; }
+.list-group-item.active { background: linear-gradient(90deg,var(--accent),var(--accent2)); color:#fff; border:none; }
+
+/* Tables */
+.table { color:#cfe9ff; }
+
+/* Footer */
+footer { border-top:1px solid rgba(255,255,255,0.03); padding:16px 0; margin-top:24px; }
+
+/* Responsive tweaks */
+@media (max-width:767px){
+  .hero h2{ font-size:1.4rem; }
+}
+
+/* ==== Ajustes compactos para tarjetas de producto y botón WhatsApp ==== */
+
+.card-product .card-body {
+  padding: 0.7rem 0.75rem 0.85rem;
+}
+
+.card-product .card-title {
+  font-size: 0.9rem;
+}
+
+/* texto descriptivo un poquito más pequeño */
+.card-product .small.text-muted {
+  font-size: 0.75rem;
+}
+
+/* === Botón WhatsApp (verde tipo barra) === */
+.btn.btn-whatsapp {
+  background-color: #25d366 !important;   /* verde WhatsApp */
+  border-color:   #25d366 !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  text-transform: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+
+.btn.btn-whatsapp i {
+  font-size: 1rem;
+}
+
+.btn.btn-whatsapp:hover {
+  background-color: #1ebe5d !important;
+  border-color:   #1ebe5d !important;
+  color: #ffffff !important;
+}
+
+/* === Página de producto estilo streaming === */
+
+.product-page {
+  max-width: 980px;
+  margin: 0 auto 40px;
+}
+
+.product-hero {
+  background: radial-gradient(circle at top left,
+              rgba(14,165,233,0.15),
+              rgba(15,23,42,0.98));
+  border-radius: 18px;
+  border: 1px solid rgba(148,163,184,0.25);
+  padding: 1.8rem 1.6rem;
+  box-shadow: 0 22px 40px rgba(15,23,42,0.85);
+}
+
+/* Columna izquierda (imagen) */
+.product-card-left {
+  background: rgba(15,23,42,0.8);
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.25);
+  padding: 1rem;
+  text-align: center;
+}
+
+.product-main-img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.product-placeholder {
+  width: 100%;
+  padding: 3rem 0;
+  border-radius: 12px;
+  border: 1px dashed rgba(148,163,184,0.6);
+  font-size: 2rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(209,213,219,0.9);
+}
+
+/* Badges */
+.badge-soft,
+.badge-cat {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.badge-soft {
+  background: rgba(34,197,94,0.16);
+  color: #bbf7d0;
+  border: 1px solid rgba(34,197,94,0.55);
+}
+
+.badge-cat {
+  background: rgba(148,163,184,0.12);
+  color: #e5e7eb;
+  border: 1px solid rgba(148,163,184,0.4);
+  margin-left: .25rem;
+}
+
+/* Texto principal */
+.product-main-info {
+  color: #e5e7eb;
+}
+
+.product-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.product-subtitle {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #9ca3af;
+}
+
+/* Precio */
+.product-price-box {
+  margin-top: 1.2rem;
+}
+
+.product-price-box .label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #9ca3af;
+}
+
+.price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.price-main {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.price-tag {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* Cantidad + botones */
+.product-actions .qty-box input {
+  background: rgba(15,23,42,0.9);
+  border-radius: 10px;
+  border: 1px solid rgba(148,163,184,0.5);
+  padding: 0.35rem 0.6rem;
+  width: 70px;
+  color: #e5e7eb;
+}
+
+.btn-primary-main,
+.btn-whatsapp-main,
+.btn-whatsapp-outline,
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.55rem 1.5rem;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+/* Botón principal */
+.btn-primary-main {
+  background: linear-gradient(90deg,#0ea5ff,#7c3aed);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 12px 25px rgba(8,47,73,0.7);
+}
+
+.btn-primary-main:hover {
+  filter: brightness(1.05);
+}
+
+/* Botón WhatsApp lleno */
+.btn-whatsapp-main {
+  background: #25D366;
+  color: #052e16;
+  font-weight: 600;
+}
+
+.btn-whatsapp-main:hover {
+  filter: brightness(1.05);
+}
+
+/* Botón WhatsApp borde */
+.btn-whatsapp-outline {
+  border: 1px solid #25D366;
+  background: transparent;
+  color: #bbf7d0;
+  margin-top: .4rem;
+}
+
+/* Botón volver */
+.btn-back {
+  border: 1px solid rgba(148,163,184,0.4);
+  color: #e5e7eb;
+  background: transparent;
+}
+
+.btn-back:hover {
+  background: rgba(15,23,42,0.8);
+}
+
+/* Tabs descripción */
+.product-extra {
+  background: rgba(15,23,42,0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.35);
+  padding: 1rem 1.25rem 1.4rem;
+}
+
+.tabs-header {
+  display: flex;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.tab-btn {
+  background: transparent;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  border-color: rgba(148,163,184,0.8);
+  color: #e5e7eb;
+  background: rgba(15,23,42,0.9);
+}
+
+.tabs-body {
+  font-size: 0.9rem;
+  color: #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-hero {
+    padding: 1.1rem 1rem;
+  }
+  .product-title {
+    font-size: 1.3rem;
+  }
+  .price-main {
+    font-size: 1.6rem;
+  }
+}
+
+/* Ajusta el selector al que uses para las cards en el index.php */
+.product-card .card-title,
+.card .card-title {
+  color: #ffffff !important;
+}
+
